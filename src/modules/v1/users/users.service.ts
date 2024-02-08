@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
+import * as bcrypt from 'bcrypt';
 import { User } from './schema/user.schema';
 import { Model } from 'mongoose';
 import { userDto } from './dto/user.dto';
@@ -44,5 +45,11 @@ export class UserService {
   async findUserByEmail(email: string) {
     const user = await this.userModel.findOne({ email: email });
     return user;
+  }
+
+  async generateHash(password: string, rounds = 10) {
+    const salt = await bcrypt.genSalt(rounds);
+    const hash = await bcrypt.hash(password, salt);
+    return hash;
   }
 }

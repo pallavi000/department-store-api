@@ -11,7 +11,10 @@ export class ProductsService {
   ) {}
 
   async fetchAllProducts() {
-    const products = await this.productsModel.find();
+    const products = await this.productsModel
+      .find()
+      .populate('category')
+      .populate('brand');
     return products;
   }
 
