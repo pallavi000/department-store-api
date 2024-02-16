@@ -19,6 +19,7 @@ import { registerDto } from './dto/register.dto';
 
 import { ApiError } from 'src/exceptions/api-error.exception';
 import { UserService } from '../users/users.service';
+import { AuthGuard } from 'src/guards/auth.guard';
 
 @Controller('auth')
 export class AuthController {
@@ -61,6 +62,17 @@ export class AuthController {
       const { password, ...payload } = user;
       const token = this.authService.generateToken(payload);
       return { token, user: payload };
+    } catch (error) {
+      throw new ApiError(error);
+    }
+  }
+
+  @Get('/profile')
+  @UseGuards(AuthGuard)
+  async getCurrentUser(@Req() req: any) {
+    try {
+      const user = await this.userService.getUserById(req.user._id);
+      return user;
     } catch (error) {
       throw new ApiError(error);
     }

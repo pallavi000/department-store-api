@@ -7,6 +7,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { JWT } from 'utils/constant';
 import { UserModel } from '../users/schema/user.schema';
 import { UserService } from '../users/users.service';
+import { ConfigService } from '@nestjs/config';
 
 @Module({
   imports: [
@@ -16,7 +17,7 @@ import { UserService } from '../users/users.service';
       signOptions: { expiresIn: JWT.EXPIRES_IN },
     }),
   ],
-  providers: [AuthService, UserService],
+  providers: [AuthService, UserService, ConfigService],
   controllers: [AuthController],
 })
 export class AuthModule {}
