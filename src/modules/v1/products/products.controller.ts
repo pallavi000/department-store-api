@@ -6,10 +6,12 @@ import {
   Param,
   Post,
   Put,
+  UseGuards,
 } from '@nestjs/common';
 import { ProductsService } from './products.service';
 import { ApiError } from 'src/exceptions/api-error.exception';
 import { productsDto } from './dto/products.dto';
+import { AuthGuard } from 'src/guards/auth.guard';
 
 @Controller('products')
 export class ProductsController {
