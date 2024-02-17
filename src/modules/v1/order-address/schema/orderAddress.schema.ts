@@ -1,4 +1,4 @@
-import { Prop, Schema } from '@nestjs/mongoose';
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose from 'mongoose';
 
 @Schema({ timestamps: true })
@@ -27,3 +27,9 @@ export class OrderAddress {
   @Prop({ type: mongoose.Types.ObjectId, ref: 'User', required: true })
   user: mongoose.Types.ObjectId;
 }
+
+const OrderAddressSchema = SchemaFactory.createForClass(OrderAddress);
+export const OrderAddressModel = {
+  name: OrderAddress.name,
+  schema: OrderAddressSchema,
+};
