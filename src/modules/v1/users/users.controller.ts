@@ -6,11 +6,13 @@ import {
   Param,
   Post,
   Put,
+  UseGuards,
 } from '@nestjs/common';
 
 import { userDto } from './dto/user.dto';
 import { UserService } from './users.service';
 import { ApiError } from 'src/exceptions/api-error.exception';
+import { AuthGuard } from 'src/guards/auth.guard';
 
 @Controller('users')
 export class UserController {
@@ -27,6 +29,7 @@ export class UserController {
   }
 
   @Post('/')
+  @UseGuards(AuthGuard)
   async createUser(@Body() body: userDto) {
     try {
       const user = await this.userService.createUser(body);
@@ -47,6 +50,7 @@ export class UserController {
   }
 
   @Put('/:id')
+  @UseGuards(AuthGuard)
   async updateUserById(@Param('id') userId: string, @Body() body: userDto) {
     try {
       const user = await this.userService.updateUserById(userId, body);
@@ -57,6 +61,7 @@ export class UserController {
   }
 
   @Delete('/:id')
+  @UseGuards(AuthGuard)
   async deleteUserById(@Param('id') userId: string) {
     try {
       const user = await this.userService.deleteUserById(userId);

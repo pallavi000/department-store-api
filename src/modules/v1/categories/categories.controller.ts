@@ -6,11 +6,13 @@ import {
   Param,
   Post,
   Put,
+  UseGuards,
 } from '@nestjs/common';
 
 import { CategoriesService } from './categories.service';
 import { ApiError } from 'src/exceptions/api-error.exception';
 import { categoryDto } from './dto/category.dto';
+import { AuthGuard } from 'src/guards/auth.guard';
 
 @Controller('categories')
 export class CategoriesController {
@@ -27,6 +29,7 @@ export class CategoriesController {
   }
 
   @Post('/')
+  @UseGuards(AuthGuard)
   async createCategory(@Body() body: categoryDto) {
     try {
       const category = await this.categoriesService.createCategory(body);
@@ -47,6 +50,7 @@ export class CategoriesController {
   }
 
   @Put('/:id')
+  @UseGuards(AuthGuard)
   async updateCategoryById(
     @Param('id') categoryId: string,
     @Body() body: categoryDto,
@@ -63,6 +67,7 @@ export class CategoriesController {
   }
 
   @Delete('/:id')
+  @UseGuards(AuthGuard)
   async deleteCategoryById(@Param('id') categoryId: string) {
     try {
       const category =

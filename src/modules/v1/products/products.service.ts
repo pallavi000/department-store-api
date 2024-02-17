@@ -1,13 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Products } from './schema/products.schema';
+import { Product } from './schema/products.schema';
 import { Model } from 'mongoose';
 import { productsDto } from './dto/products.dto';
 
 @Injectable()
 export class ProductsService {
   constructor(
-    @InjectModel(Products.name) private readonly productsModel: Model<Products>,
+    @InjectModel(Product.name) private readonly productsModel: Model<Product>,
   ) {}
 
   async fetchAllProducts() {

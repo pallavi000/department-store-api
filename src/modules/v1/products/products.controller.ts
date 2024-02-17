@@ -28,6 +28,7 @@ export class ProductsController {
   }
 
   @Post('/')
+  @UseGuards(AuthGuard)
   async createProduct(@Body() body: productsDto) {
     try {
       const product = await this.productsService.createProduct(body);
@@ -48,6 +49,7 @@ export class ProductsController {
   }
 
   @Put('/:id')
+  @UseGuards(AuthGuard)
   async updateProductById(
     @Param('id') productId: string,
     @Body() body: productsDto,
@@ -64,6 +66,7 @@ export class ProductsController {
   }
 
   @Delete('/:id')
+  @UseGuards(AuthGuard)
   async deleteProductById(@Param('id') productId: string) {
     try {
       const product = await this.productsService.deleteProductById(productId);

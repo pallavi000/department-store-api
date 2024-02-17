@@ -2,7 +2,7 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose from 'mongoose';
 
 @Schema()
-export class Products {
+export class Product {
   @Prop({ required: true })
   name: string;
 
@@ -32,5 +32,5 @@ export class Products {
   expiry_date: Date;
 }
 
-const ProductsSchema = SchemaFactory.createForClass(Products);
-export const ProductsModel = { name: Products.name, schema: ProductsSchema };
+const ProductSchema = SchemaFactory.createForClass(Product);
+export const ProductsModel = { name: Product.name, schema: ProductSchema };

@@ -1,4 +1,4 @@
-import { HttpException } from '@nestjs/common';
+import { Catch, HttpException } from '@nestjs/common';
 
 export class ApiError extends HttpException {
   constructor(error: any) {

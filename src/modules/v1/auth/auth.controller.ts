@@ -59,7 +59,8 @@ export class AuthController {
       if (!validUser) {
         throw new BadRequestException('Invalid Password');
       }
-      const { password, ...payload } = user;
+      const { password, ...payload } = user.toObject();
+
       const token = this.authService.generateToken(payload);
       return { token, user: payload };
     } catch (error) {
