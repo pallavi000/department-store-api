@@ -15,6 +15,7 @@ import { CartDto } from './dto/cart.dto';
 import { AuthGuard } from 'src/guards/auth.guard';
 import { IExpressRequest } from 'src/@types/common';
 import { ApiError } from 'src/exceptions/api-error.exception';
+import mongoose from 'mongoose';
 
 @Controller('carts')
 export class CartController {
@@ -64,21 +65,23 @@ export class CartController {
 
   @Post()
   @UseGuards(AuthGuard)
-  async createOrUpdate(@Body() body: any, @Req() req: IExpressRequest) {
-    console.log(body);
+  async createOrUpdate(@Body() body: CartDto, @Req() req: IExpressRequest) {
     try {
       const existingCart = await this.cartService.findExistingCart(
         body.product,
         req.user._id,
       );
       if (existingCart) {
-        const cart = await this.cartService.updateCartQuantity(
-          { ...body },
+        const exitCart = await this.cartService.updateCartQuantity(
+          { ...body, user: req.user._id },
           existingCart._id,
         );
-        return cart;
+        return exitCart;
       } else {
-        const cart = await this.cartService.createCart(body);
+        const cart = await this.cartService.createCart({
+          ...body,
+          user: req.user._id,
+        });
         return cart;
       }
     } catch (error) {

@@ -11,12 +11,20 @@ export class OrderService {
   ) {}
 
   async findAllOrder() {
-    const orders = await this.orderModel.find();
+    const orders = await this.orderModel
+      .find()
+      .populate('product')
+      .populate('shipping')
+      .populate('billing');
     return orders;
   }
 
-  async createOrder(body: OrderDto) {
-    const order = await this.orderModel.create(body);
+  async createOrder(body: OrderDto, orderProductIds: string[], userId: string) {
+    const order = await this.orderModel.create({
+      ...body,
+      products: orderProductIds,
+      user: userId,
+    });
     return order;
   }
 }

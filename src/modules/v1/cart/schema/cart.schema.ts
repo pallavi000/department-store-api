@@ -4,12 +4,16 @@ import mongoose from 'mongoose';
 @Schema()
 export class Cart {
   @Prop({
-    type: { type: mongoose.Types.ObjectId, ref: 'Product' },
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Product',
+    required: true,
   })
   product: mongoose.Types.ObjectId;
 
   @Prop({
-    type: { type: mongoose.Types.ObjectId, ref: 'User' },
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: true,
   })
   user: mongoose.Types.ObjectId;
 

@@ -4,12 +4,14 @@ import mongoose from 'mongoose';
 @Schema()
 export class OrderProduct {
   @Prop({
-    type: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
   })
   user: mongoose.Types.ObjectId;
 
   @Prop({
-    type: { type: mongoose.Schema.Types.ObjectId, ref: 'Product' },
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Product',
   })
   product: mongoose.Types.ObjectId;
 

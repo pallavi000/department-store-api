@@ -1,9 +1,6 @@
 import { IsArray, IsNumber, IsString } from 'class-validator';
 
 export class OrderDto {
-  @IsArray()
-  product: string[];
-
   @IsString()
   shipping: string;
 
@@ -15,4 +12,7 @@ export class OrderDto {
 
   @IsString()
   payment_method: string;
+
+  @IsArray()
+  carts: string[];
 }

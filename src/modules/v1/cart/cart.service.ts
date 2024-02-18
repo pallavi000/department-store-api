@@ -19,7 +19,12 @@ export class CartService {
   }
 
   async createCart(body: CartDto) {
-    const cart = await this.cartModel.create(body);
+    const cart = await this.cartModel.create({
+      quantity: body.quantity,
+      total: body.total,
+      product: body.product,
+      user: body.user,
+    });
     return cart;
   }
 
@@ -32,11 +37,9 @@ export class CartService {
   }
 
   async findCartItemsByUserId(cartId: string, userId: string) {
-    console.log(cartId, userId);
     const cart = await this.cartModel
       .findOne({ _id: cartId, user: userId })
       .populate('product');
-    console.log(cart);
     return cart;
   }
 

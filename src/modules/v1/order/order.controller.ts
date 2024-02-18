@@ -8,6 +8,7 @@ import { OrderProductService } from '../order-product/orderProduct.service';
 import { OrderAddressService } from '../order-address/orderAddress.service';
 import { AddressService } from '../address/address.service';
 import { CartService } from '../cart/cart.service';
+import { OrderDto } from './dto/order.dto';
 
 @Controller('orders')
 export class OrderController {
@@ -32,8 +33,7 @@ export class OrderController {
 
   @Post()
   @UseGuards(AuthGuard)
-  async createOrder(@Body() body: any, @Req() req: IExpressRequest) {
-    console.log(body);
+  async createOrder(@Body() body: OrderDto, @Req() req: IExpressRequest) {
     let orderProductIds = [];
     try {
       const shippingAddress = await this.addressService.findAddressById(
@@ -60,36 +60,38 @@ export class OrderController {
         ...billingAddress,
         user: req.user._id,
       });
-      console.log(billing, shipping);
 
       //order-products
       for (const cart of body.carts) {
-        console.log(cart, body.carts, 'cart');
         const cartItem = await this.cartService.findCartItemsByUserId(
           cart,
           req.user._id,
         );
-        console.log(cartItem);
         const product = await this.productService.getProductById(
-          cartItem.product.toString(),
+          cartItem.product._id.toString(),
         );
+        const { _id, ...productData } = product.toObject();
         const op = await this.orderProductService.createOrderProduct({
-          ...product,
+          ...productData,
           quantity: cartItem.quantity,
           user: cartItem.user,
           product: product._id,
+          image: 'xx',
         });
         orderProductIds.push(op._id);
+        await this.cartService.removeCart(cart, req.user._id);
       }
 
       //order-create
-      const order = await this.orderService.createOrder({
-        ...body,
-        product: orderProductIds,
-        shipping: shipping._id,
-        billing: billing._id,
-        user: req.user._id,
-      });
+      const order = await this.orderService.createOrder(
+        {
+          ...body,
+          shipping: shipping._id.toString(),
+          billing: billing._id.toString(),
+        },
+        orderProductIds,
+        req.user._id,
+      );
 
       return order;
     } catch (error) {
