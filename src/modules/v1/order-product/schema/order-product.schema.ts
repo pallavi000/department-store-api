@@ -13,11 +13,6 @@ export class OrderProduct {
   })
   product: mongoose.Types.ObjectId;
 
-  @Prop({
-    type: { type: mongoose.Schema.Types.ObjectId, ref: 'Order' },
-  })
-  order: mongoose.Types.ObjectId;
-
   @Prop({ required: true })
   name: string;
 

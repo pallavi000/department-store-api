@@ -24,7 +24,19 @@ export class CartService {
   }
 
   async findExistingCart(product: string, user: string) {
-    const cart = await this.cartModel.findOne({ product: product, user: user });
+    const cart = await this.cartModel
+      .findOne({ product: product, user: user })
+      .populate('product');
+
+    return cart;
+  }
+
+  async findCartItemsByUserId(cartId: string, userId: string) {
+    console.log(cartId, userId);
+    const cart = await this.cartModel
+      .findOne({ _id: cartId, user: userId })
+      .populate('product');
+    console.log(cart);
     return cart;
   }
 

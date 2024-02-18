@@ -31,17 +31,49 @@ export class CartController {
     }
   }
 
+  @Get(':id')
+  @UseGuards(AuthGuard)
+  async findCartById(@Param('id') cartId: string, @Req() req: IExpressRequest) {
+    try {
+      const cart = await this.cartService.findCartItemsByUserId(
+        cartId,
+        req.user._id,
+      );
+      return cart;
+    } catch (error) {
+      throw new ApiError(error);
+    }
+  }
+
+  @Get('/order')
+  @UseGuards(AuthGuard)
+  async findCartItemByUserId(
+    @Body() cartId: string,
+    @Req() req: IExpressRequest,
+  ) {
+    try {
+      const cart = await this.cartService.findCartItemsByUserId(
+        cartId,
+        req.user._id,
+      );
+      return cart;
+    } catch (error) {
+      throw new ApiError(error);
+    }
+  }
+
   @Post()
   @UseGuards(AuthGuard)
-  async createOrUpdate(@Body() body: CartDto, @Req() req: IExpressRequest) {
+  async createOrUpdate(@Body() body: any, @Req() req: IExpressRequest) {
+    console.log(body);
     try {
       const existingCart = await this.cartService.findExistingCart(
-        body.productId,
+        body.product,
         req.user._id,
       );
       if (existingCart) {
         const cart = await this.cartService.updateCartQuantity(
-          body,
+          { ...body },
           existingCart._id,
         );
         return cart;

@@ -32,4 +32,9 @@ export class AddressService {
     const address = await this.addressModel.deleteOne({ id: addressId });
     return address;
   }
+
+  async findAddressById(addressId: string) {
+    const address = await this.addressModel.findById(addressId);
+    return address;
+  }
 }

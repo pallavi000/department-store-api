@@ -31,6 +31,17 @@ export class AddressController {
     }
   }
 
+  @Get(':id')
+  @UseGuards(AuthGuard)
+  async findAddressById(@Param('id') userId: string) {
+    try {
+      const address = await this.addressService.findAddressById(userId);
+      return address;
+    } catch (error) {
+      throw new ApiError(error);
+    }
+  }
+
   @Post()
   @UseGuards(AuthGuard)
   async createAddress(@Body() body: any, @Req() req: IExpressRequest) {

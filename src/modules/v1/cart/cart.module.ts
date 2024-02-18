@@ -10,5 +10,6 @@ import { ConfigService } from '@nestjs/config';
   imports: [MongooseModule.forFeature([CartModel])],
   controllers: [CartController],
   providers: [CartService, JwtService, ConfigService],
+  exports: [CartModule, CartService],
 })
 export class CartModule {}

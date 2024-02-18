@@ -2,10 +2,10 @@ import { IsNumber, IsString } from 'class-validator';
 
 export class CartDto {
   @IsString()
-  userId: string;
+  user: string;
 
   @IsString()
-  productId: string;
+  product: string;
 
   @IsNumber()
   quantity: number;

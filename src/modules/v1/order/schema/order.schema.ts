@@ -9,9 +9,9 @@ export class Order {
   user: mongoose.Types.ObjectId;
 
   @Prop({
-    type: { type: mongoose.Schema.Types.ObjectId, ref: 'Product' },
+    type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Product' }],
   })
-  product: mongoose.Types.ObjectId;
+  product: mongoose.Types.ObjectId[];
 
   @Prop({ type: String, enum: ['CREDIT_CARD', 'PAYPAL', 'BANK_TRANSFER'] })
   payment_method: string;

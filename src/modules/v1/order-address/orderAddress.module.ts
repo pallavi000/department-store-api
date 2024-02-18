@@ -11,6 +11,6 @@ import { ConfigService } from '@nestjs/config';
   imports: [MongooseModule.forFeature([OrderAddressModel])],
   controllers: [OrderAddressController],
   providers: [OrderAddressService, JwtService, ConfigService],
-  exports: [OrderAddressModule],
+  exports: [OrderAddressModule, OrderAddressService],
 })
 export class OrderAddressModule {}

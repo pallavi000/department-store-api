@@ -10,5 +10,6 @@ import { ConfigService } from '@nestjs/config';
   imports: [MongooseModule.forFeature([AddressModel])],
   controllers: [AddressController],
   providers: [AddressService, JwtService, ConfigService],
+  exports: [AddressModule, AddressService],
 })
 export class AddressModule {}
