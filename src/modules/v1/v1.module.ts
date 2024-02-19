@@ -17,10 +17,11 @@ import { OrderProductModule } from './order-product/orderProduct.module';
     MongooseModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
-      useFactory: async (configService: ConfigService) => ({
+      useFactory: (configService: ConfigService) => ({
         uri: configService.get<string>('DB_URL'),
       }),
     }),
+    ConfigModule.forRoot(),
     UsersModule,
     ProductsModule,
     CategoriesModule,
