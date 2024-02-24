@@ -3,6 +3,7 @@ import {
   Controller,
   Delete,
   Get,
+  HttpStatus,
   Param,
   Post,
   Put,
@@ -11,13 +12,20 @@ import {
 import { BrandsService } from './brands.service';
 import { ApiError } from 'src/exceptions/api-error.exception';
 import { brandDto } from './dto/brand.dto';
+import { ApiResponse, ApiTags } from '@nestjs/swagger';
 
+@ApiTags('brands')
 @Controller('brands')
 export class BrandsController {
   constructor(private readonly brandService: BrandsService) {}
 
+  @ApiResponse({
+    status: HttpStatus.OK,
+    type: brandDto,
+    isArray: true,
+  })
   @Get('/')
-  async getBrand() {
+  async getBrand(): Promise<brandDto[]> {
     try {
       const brand = await this.brandService.fetchAllBrands();
       return brand;
@@ -27,7 +35,7 @@ export class BrandsController {
   }
 
   @Post('/')
-  async createBrand(@Body() body: brandDto) {
+  async createBrand(@Body() body: brandDto): Promise<brandDto> {
     try {
       const brand = await this.brandService.createBrand(body);
       return brand;
@@ -37,7 +45,7 @@ export class BrandsController {
   }
 
   @Get('/:id')
-  async getBrandById(@Param('id') brandId: string) {
+  async getBrandById(@Param('id') brandId: string): Promise<brandDto> {
     try {
       const brand = await this.brandService.getBrandById(brandId);
       return brand;
@@ -47,7 +55,10 @@ export class BrandsController {
   }
 
   @Put('/:id')
-  async updateBrandById(@Param('id') brandId: string, @Body() body: brandDto) {
+  async updateBrandById(
+    @Param('id') brandId: string,
+    @Body() body: brandDto,
+  ): Promise<brandDto> {
     try {
       const brand = await this.brandService.updateBrandById(brandId, body);
       return brand;
