@@ -16,11 +16,19 @@ import { AuthGuard } from 'src/guards/auth.guard';
 import { IExpressRequest } from 'src/@types/common';
 import { ApiError } from 'src/exceptions/api-error.exception';
 import mongoose from 'mongoose';
+import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Carts')
 @Controller('carts')
 export class CartController {
   constructor(private readonly cartService: CartService) {}
 
+  @ApiResponse({
+    status: HttpStatus.OK,
+    type: CartDto,
+    isArray: true,
+  })
+  @ApiBearerAuth()
   @Get()
   @UseGuards(AuthGuard)
   async getCartsByUser(@Req() req: IExpressRequest) {
@@ -32,6 +40,11 @@ export class CartController {
     }
   }
 
+  @ApiResponse({
+    status: HttpStatus.OK,
+    type: CartDto,
+  })
+  @ApiBearerAuth()
   @Get(':id')
   @UseGuards(AuthGuard)
   async findCartById(@Param('id') cartId: string, @Req() req: IExpressRequest) {
@@ -63,6 +76,11 @@ export class CartController {
     }
   }
 
+  @ApiResponse({
+    status: HttpStatus.CREATED,
+    type: CartDto,
+  })
+  @ApiBearerAuth()
   @Post()
   @UseGuards(AuthGuard)
   async createOrUpdate(@Body() body: CartDto, @Req() req: IExpressRequest) {
@@ -89,6 +107,11 @@ export class CartController {
     }
   }
 
+  @ApiResponse({
+    status: 204,
+    type: CartDto,
+  })
+  @ApiBearerAuth()
   @Delete(':id')
   @UseGuards(AuthGuard)
   @HttpCode(HttpStatus.NO_CONTENT)

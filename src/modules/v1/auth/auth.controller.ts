@@ -20,7 +20,10 @@ import { registerDto } from './dto/register.dto';
 import { ApiError } from 'src/exceptions/api-error.exception';
 import { UserService } from '../users/users.service';
 import { AuthGuard } from 'src/guards/auth.guard';
+import { ApiResponse, ApiTags } from '@nestjs/swagger';
+import { userDto } from '../users/dto/user.dto';
 
+@ApiTags('Auth')
 @Controller('auth')
 export class AuthController {
   constructor(
@@ -28,6 +31,10 @@ export class AuthController {
     private readonly userService: UserService,
   ) {}
 
+  @ApiResponse({
+    status: HttpStatus.CREATED,
+    type: registerDto,
+  })
   @Post('/register')
   async register(@Body() body: registerDto) {
     try {
@@ -45,6 +52,10 @@ export class AuthController {
     }
   }
 
+  @ApiResponse({
+    status: HttpStatus.CREATED,
+    type: loginDto,
+  })
   @Post('/login')
   async login(@Body() body: loginDto) {
     try {
@@ -68,6 +79,10 @@ export class AuthController {
     }
   }
 
+  @ApiResponse({
+    status: HttpStatus.OK,
+    type: userDto,
+  })
   @Get('/profile')
   @UseGuards(AuthGuard)
   async getCurrentUser(@Req() req: any) {

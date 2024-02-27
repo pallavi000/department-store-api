@@ -12,7 +12,7 @@ import {
 import { BrandsService } from './brands.service';
 import { ApiError } from 'src/exceptions/api-error.exception';
 import { brandDto } from './dto/brand.dto';
-import { ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 @ApiTags('brands')
 @Controller('brands')
@@ -34,6 +34,12 @@ export class BrandsController {
     }
   }
 
+  @ApiBearerAuth()
+  @ApiResponse({
+    status: HttpStatus.CREATED,
+    type: brandDto,
+    isArray: false,
+  })
   @Post('/')
   async createBrand(@Body() body: brandDto): Promise<brandDto> {
     try {
@@ -43,7 +49,12 @@ export class BrandsController {
       throw new ApiError(error);
     }
   }
-
+  @ApiBearerAuth()
+  @ApiResponse({
+    status: HttpStatus.OK,
+    type: brandDto,
+    isArray: false,
+  })
   @Get('/:id')
   async getBrandById(@Param('id') brandId: string): Promise<brandDto> {
     try {
@@ -54,6 +65,12 @@ export class BrandsController {
     }
   }
 
+  @ApiBearerAuth()
+  @ApiResponse({
+    status: HttpStatus.CREATED,
+    type: brandDto,
+    isArray: false,
+  })
   @Put('/:id')
   async updateBrandById(
     @Param('id') brandId: string,
@@ -67,6 +84,10 @@ export class BrandsController {
     }
   }
 
+  @ApiBearerAuth()
+  @ApiResponse({
+    status: 204,
+  })
   @Delete('/:id')
   async deleteBrandById(@Param('id') brandId: string) {
     try {

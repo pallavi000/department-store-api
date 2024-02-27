@@ -3,6 +3,7 @@ import {
   Controller,
   Delete,
   Get,
+  HttpStatus,
   Param,
   Post,
   Put,
@@ -13,11 +14,18 @@ import { CategoriesService } from './categories.service';
 import { ApiError } from 'src/exceptions/api-error.exception';
 import { categoryDto } from './dto/category.dto';
 import { AuthGuard } from 'src/guards/auth.guard';
+import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Category')
 @Controller('categories')
 export class CategoriesController {
   constructor(private readonly categoriesService: CategoriesService) {}
 
+  @ApiResponse({
+    status: HttpStatus.OK,
+    type: categoryDto,
+    isArray: true,
+  })
   @Get('/')
   async getAllCategories() {
     try {
@@ -28,6 +36,12 @@ export class CategoriesController {
     }
   }
 
+  @ApiResponse({
+    status: HttpStatus.CREATED,
+    type: categoryDto,
+    isArray: true,
+  })
+  @ApiBearerAuth()
   @Post('/')
   @UseGuards(AuthGuard)
   async createCategory(@Body() body: categoryDto) {
@@ -39,6 +53,10 @@ export class CategoriesController {
     }
   }
 
+  @ApiResponse({
+    status: HttpStatus.OK,
+    type: categoryDto,
+  })
   @Get('/:id')
   async getCategoryById(@Param('id') categoryId: string) {
     try {
@@ -49,6 +67,11 @@ export class CategoriesController {
     }
   }
 
+  @ApiResponse({
+    status: HttpStatus.CREATED,
+    type: categoryDto,
+  })
+  @ApiBearerAuth()
   @Put('/:id')
   @UseGuards(AuthGuard)
   async updateCategoryById(
@@ -66,6 +89,11 @@ export class CategoriesController {
     }
   }
 
+  @ApiResponse({
+    status: 204,
+    type: categoryDto,
+  })
+  @ApiBearerAuth()
   @Delete('/:id')
   @UseGuards(AuthGuard)
   async deleteCategoryById(@Param('id') categoryId: string) {
