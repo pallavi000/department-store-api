@@ -4,9 +4,6 @@ import mongoose from 'mongoose';
 @Schema({ timestamps: true })
 export class OrderAddress {
   @Prop({ type: String })
-  name: string;
-
-  @Prop({ type: String })
   country: string;
 
   @Prop({ type: String })

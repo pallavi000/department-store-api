@@ -1,4 +1,12 @@
-import { Body, Controller, Get, Post, Req, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  HttpStatus,
+  Post,
+  Req,
+  UseGuards,
+} from '@nestjs/common';
 import { OrderService } from './order.service';
 import { ApiError } from 'src/exceptions/api-error.exception';
 import { IExpressRequest } from 'src/@types/common';
@@ -9,7 +17,9 @@ import { OrderAddressService } from '../order-address/orderAddress.service';
 import { AddressService } from '../address/address.service';
 import { CartService } from '../cart/cart.service';
 import { OrderDto } from './dto/order.dto';
+import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Order')
 @Controller('orders')
 export class OrderController {
   constructor(
@@ -21,6 +31,12 @@ export class OrderController {
     private readonly cartService: CartService,
   ) {}
 
+  @ApiBearerAuth()
+  @ApiResponse({
+    status: HttpStatus.OK,
+    type: OrderDto,
+    isArray: true,
+  })
   @Get()
   async findAllOrder() {
     try {
@@ -31,6 +47,11 @@ export class OrderController {
     }
   }
 
+  @ApiBearerAuth()
+  @ApiResponse({
+    status: HttpStatus.CREATED,
+    type: OrderDto,
+  })
   @Post()
   @UseGuards(AuthGuard)
   async createOrder(@Body() body: OrderDto, @Req() req: IExpressRequest) {
