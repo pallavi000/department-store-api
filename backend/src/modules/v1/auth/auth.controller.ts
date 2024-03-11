@@ -87,7 +87,9 @@ export class AuthController {
   @UseGuards(AuthGuard)
   async getCurrentUser(@Req() req: any) {
     try {
+      console.log('user api');
       const user = await this.userService.getUserById(req.user._id);
+
       return user;
     } catch (error) {
       throw new ApiError(error);

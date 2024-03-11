@@ -14,6 +14,7 @@ import MenuItem from "@mui/material/MenuItem";
 import AdbIcon from "@mui/icons-material/Adb";
 import { Stack } from "@mui/material";
 import { Link } from "react-router-dom";
+import { useAuthContext } from "../../context/AuthContext";
 
 const pages = ["Products", "Pricing", "Blog"];
 const settings = ["Profile", "Account", "Dashboard", "Logout"];
@@ -42,6 +43,14 @@ function UserNavBar() {
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
   };
+
+  const { user, token } = useAuthContext();
+
+  React.useEffect(() => {
+    if (user) {
+      setIsLoggedIn(true);
+    }
+  }, [user]);
 
   return (
     <AppBar position="static">
@@ -148,7 +157,7 @@ function UserNavBar() {
                 <Tooltip title="Open settings">
                   <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                     <Avatar
-                      alt="Remy Sharp"
+                      alt={user?.name}
                       src="/static/images/avatar/2.jpg"
                     />
                   </IconButton>

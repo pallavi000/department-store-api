@@ -15,7 +15,6 @@ export class AuthService {
     password: string,
     hashPassword: string,
   ): Promise<boolean> {
-    console.log(password, hashPassword);
     const isRightPassword = await bcrypt.compare(password, hashPassword);
     if (!isRightPassword) {
       return false;
