@@ -37,6 +37,7 @@ export default function SignIn() {
         localStorage.setItem("token", response.token);
         setToken(response.token);
       }
+      window.location.href = "/";
     } catch (error) {
       console.log(error);
     }

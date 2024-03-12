@@ -48,6 +48,7 @@ export class CartService {
       { _id: cartId },
       {
         quantity: body.quantity,
+        total: body.total,
       },
     );
     return cart;

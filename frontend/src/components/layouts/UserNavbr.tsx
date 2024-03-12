@@ -116,7 +116,6 @@ function UserNavBar() {
             variant="h5"
             noWrap
             component="a"
-            href="#app-bar-with-responsive-menu"
             sx={{
               mr: 2,
               display: { xs: "flex", md: "none" },
@@ -128,7 +127,7 @@ function UserNavBar() {
               textDecoration: "none",
             }}
           >
-            LOGO
+            <Link to={"/"}>LOGO</Link>
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
             {pages.map((page) => (

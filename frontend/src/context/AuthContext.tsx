@@ -4,11 +4,15 @@ import { getCurrentUserApi } from "../service/authService";
 import { Box } from "@mui/material";
 import { TAuthContextStates } from "../@types/AuthContext";
 import { HouseSidingSharp, ViewKanbanOutlined } from "@mui/icons-material";
+import { TCart } from "../@types/Cart";
+import { getCartsApi } from "../service/cartService";
 
 export const initialState: TAuthContextStates = {
   token: "",
   user: null,
   setToken: () => {},
+  carts: [],
+  setCarts: () => {},
 };
 const AuthContext = createContext(initialState);
 export const useAuthContext = () => useContext(AuthContext);
@@ -18,6 +22,7 @@ const AuthContextProvider = ({ children }: React.PropsWithChildren) => {
     localStorage.getItem("token") || ""
   );
   const [user, setUser] = useState<TUser | null>(null);
+  const [carts, setCarts] = useState<TCart[]>([]);
   const [isAppReady, setIsAppReady] = useState(false);
 
   const getCurrentUser = async () => {
@@ -30,9 +35,19 @@ const AuthContextProvider = ({ children }: React.PropsWithChildren) => {
     setIsAppReady(true);
   };
 
+  const getCarts = async () => {
+    try {
+      const data = await getCartsApi();
+      setCarts(data);
+    } catch (error) {
+      throw error;
+    }
+  };
+
   useEffect(() => {
     if (token) {
       getCurrentUser();
+      getCarts();
     } else {
       setIsAppReady(true);
     }
@@ -41,7 +56,7 @@ const AuthContextProvider = ({ children }: React.PropsWithChildren) => {
   if (!isAppReady) return <Box>APP is loading.......</Box>;
 
   return (
-    <AuthContext.Provider value={{ token, setToken, user }}>
+    <AuthContext.Provider value={{ token, setToken, user, carts, setCarts }}>
       {children}
     </AuthContext.Provider>
   );
