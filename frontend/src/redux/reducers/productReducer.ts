@@ -1,34 +1,35 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { fetchAllProductsApi } from "../../service/productService";
-import { TProduct } from "../../@types/Product";
+import { fetchProductByIdApi } from "../../service/productService";
 import { ProductState } from "../../@types/ReduxState";
 
 const initialState: ProductState = {
-  products: [],
+  product: null,
   isLoading: false,
   error: null,
 };
+
 const productSlice = createSlice({
-  name: "products",
+  name: "product",
   initialState,
   reducers: {},
   extraReducers: (builder) => {
-    builder.addCase(fetchProducts.pending, (state, action) => {
+    builder.addCase(fetchProductById.pending, (state, action) => {
       return {
         ...state,
         isLoading: true,
       };
     });
 
-    builder.addCase(fetchProducts.fulfilled, (state, action) => {
+    builder.addCase(fetchProductById.fulfilled, (state, action) => {
       return {
         ...state,
         isLoading: false,
+        product: action.payload,
         error: null,
-        products: action.payload,
       };
     });
-    builder.addCase(fetchProducts.rejected, (state, action) => {
+
+    builder.addCase(fetchProductById.rejected, (state, action) => {
       const errorMessage = action.error.message;
       return {
         ...state,
@@ -39,13 +40,16 @@ const productSlice = createSlice({
   },
 });
 
-export const fetchProducts = createAsyncThunk("fetchProducts", async () => {
-  try {
-    const data = await fetchAllProductsApi();
-    return data;
-  } catch (error) {
-    console.log(error);
+export const fetchProductById = createAsyncThunk(
+  "fetchProductById",
+  async ({ id }: { id: string }) => {
+    try {
+      const response = await fetchProductByIdApi(id);
+      return response.data;
+    } catch (error) {
+      console.log(error);
+    }
   }
-});
-export const {} = productSlice.actions;
+);
+
 export default productSlice.reducer;

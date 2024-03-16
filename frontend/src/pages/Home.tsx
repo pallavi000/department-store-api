@@ -12,7 +12,7 @@ import {
 import { useSelector } from "react-redux";
 import { TProduct } from "../@types/Product";
 import Product from "../components/Product";
-import { fetchProducts } from "../redux/reducers/productReducer";
+import { fetchProducts } from "../redux/reducers/productsReducer";
 import { AppState, useAppDispatch } from "../redux/store";
 
 function Home() {
@@ -22,8 +22,8 @@ function Home() {
     dispatch(fetchProducts());
   }, []);
   const { products, isLoading } = useSelector((state: AppState) => ({
-    products: state.product.products,
-    isLoading: state.product.isLoading,
+    products: state.products.products,
+    isLoading: state.products.isLoading,
   }));
 
   {
