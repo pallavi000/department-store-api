@@ -37,9 +37,11 @@ export class CartService {
   }
 
   async findCartItemsByUserId(cartId: string, userId: string) {
+    console.log(cartId, userId);
     const cart = await this.cartModel
       .findOne({ _id: cartId, user: userId })
       .populate('product');
+
     return cart;
   }
 

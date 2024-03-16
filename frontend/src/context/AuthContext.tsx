@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useMemo, useState } from "react";
 import { TUser } from "../@types/User";
 import { getCurrentUserApi } from "../service/authService";
 import { Box } from "@mui/material";
@@ -44,6 +44,17 @@ const AuthContextProvider = ({ children }: React.PropsWithChildren) => {
     }
   };
 
+  const contextValue = useMemo(
+    () => ({
+      token,
+      setToken,
+      user,
+      carts,
+      setCarts,
+    }),
+    [token, user, carts]
+  );
+
   useEffect(() => {
     if (token) {
       getCurrentUser();
@@ -56,9 +67,7 @@ const AuthContextProvider = ({ children }: React.PropsWithChildren) => {
   if (!isAppReady) return <Box>APP is loading.......</Box>;
 
   return (
-    <AuthContext.Provider value={{ token, setToken, user, carts, setCarts }}>
-      {children}
-    </AuthContext.Provider>
+    <AuthContext.Provider value={contextValue}>{children}</AuthContext.Provider>
   );
 };
 

@@ -14,10 +14,12 @@ import MenuItem from "@mui/material/MenuItem";
 import AdbIcon from "@mui/icons-material/Adb";
 import { Stack } from "@mui/material";
 import { Link } from "react-router-dom";
+import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
+
 import { useAuthContext } from "../../context/AuthContext";
+import { LocalMallOutlined, ShoppingCart } from "@mui/icons-material";
 
 const pages = ["Products", "Pricing", "Blog"];
-const settings = ["Profile", "Account", "Dashboard", "Logout"];
 
 function UserNavBar() {
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
@@ -26,6 +28,8 @@ function UserNavBar() {
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(
     null
   );
+
+  const [cartCount, setCartCount] = React.useState<number>(0);
 
   const [isLoggedIn, setIsLoggedIn] = React.useState<boolean>(false);
 
@@ -44,13 +48,23 @@ function UserNavBar() {
     setAnchorElUser(null);
   };
 
-  const { user, token } = useAuthContext();
+  const { user, token, carts } = useAuthContext();
 
   React.useEffect(() => {
     if (user) {
       setIsLoggedIn(true);
     }
   }, [user]);
+
+  React.useEffect(() => {
+    if (carts.length) {
+      const totalCartCount = carts.reduce(
+        (total, cart) => total + cart.quantity,
+        0
+      );
+      setCartCount(totalCartCount);
+    }
+  }, [carts]);
 
   return (
     <AppBar position="static">
@@ -152,7 +166,16 @@ function UserNavBar() {
                 </Button>
               </Stack>
             ) : (
-              <>
+              <Stack alignItems={"center"} flexDirection={"row"} gap={3}>
+                <Box sx={{ position: "relative" }}>
+                  <Typography
+                    variant="body2"
+                    sx={{ position: "absolute", top: -15, right: 5 }}
+                  >
+                    {cartCount}
+                  </Typography>
+                  <ShoppingCart />
+                </Box>
                 <Tooltip title="Open settings">
                   <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                     <Avatar
@@ -161,7 +184,7 @@ function UserNavBar() {
                     />
                   </IconButton>
                 </Tooltip>
-              </>
+              </Stack>
             )}
 
             <Menu
@@ -180,11 +203,16 @@ function UserNavBar() {
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}
             >
-              {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                  <Typography textAlign="center">{setting}</Typography>
-                </MenuItem>
-              ))}
+              <MenuItem onClick={handleCloseUserMenu}>
+                <Link to={"/profile"}>
+                  <Typography textAlign="center" variant="body2">
+                    Profile
+                  </Typography>
+                </Link>
+              </MenuItem>
+              <MenuItem onClick={() => ""}>
+                <Typography variant="body2">Logout</Typography>
+              </MenuItem>
             </Menu>
           </Box>
         </Toolbar>

@@ -15,6 +15,10 @@ import AddressForm from "../components/AddressForm";
 import PaymentForm from "../components/PaymentForm";
 import Review from "../components/Review";
 import CheckoutAddress from "../components/CheckoutAddress";
+import { useAuthContext } from "../context/AuthContext";
+import { TCart } from "../@types/Cart";
+import { TOrderInput } from "../@types/Order";
+import { createOrderApi } from "../service/orderService";
 
 const steps = ["Shipping address", "Payment details", "Review your order"];
 
@@ -22,7 +26,18 @@ export default function Checkout() {
   const [activeStep, setActiveStep] = React.useState(0);
   const [billing, setBilling] = React.useState("");
   const [shipping, setShipping] = React.useState("");
-  const [paymentMethod, setPaymentMethod] = React.useState("Stripe");
+  const [isPaymentMethod, setIsPaymentMethod] = React.useState<boolean>(false);
+  const [cartTotal, setCartTotal] = React.useState<number>();
+  const { carts } = useAuthContext();
+
+  React.useEffect(() => {
+    if (carts && carts.length) {
+      const totalVal = carts.reduce((total, cart: TCart) => {
+        return total + cart.total;
+      }, 0);
+      setCartTotal(totalVal);
+    }
+  }, [carts]);
 
   const handleNext = () => {
     setActiveStep(activeStep + 1);
@@ -40,7 +55,7 @@ export default function Checkout() {
           <CheckoutAddress setShipping={setShipping} setBilling={setBilling} />
         );
       case 1:
-        return <PaymentForm />;
+        return <PaymentForm setIsPaymentMethod={setIsPaymentMethod} />;
       case 2:
         return <Review />;
       default:
@@ -51,8 +66,25 @@ export default function Checkout() {
   const handleNextStep = (step: number): boolean | undefined => {
     if (step === 0) {
       if (shipping && billing) return false;
-    }
+    } else if (isPaymentMethod) return false;
     return true;
+  };
+
+  const addOrder = async () => {
+    try {
+      if (shipping && billing && carts.length && cartTotal) {
+        const data: TOrderInput = {
+          shipping: shipping,
+          billing: billing,
+          total: cartTotal,
+          payment_method: "strip",
+          carts: carts.map((cart) => cart._id),
+        };
+
+        const response = await createOrderApi(data);
+        console.log(response.data);
+      }
+    } catch (error) {}
   };
 
   return (
@@ -108,14 +140,26 @@ export default function Checkout() {
                     Back
                   </Button>
                 )}
-                <Button
-                  variant="contained"
-                  disabled={handleNextStep(activeStep)}
-                  onClick={handleNext}
-                  sx={{ mt: 3, ml: 1 }}
-                >
-                  {activeStep === steps.length - 1 ? "Place order" : "Next"}
-                </Button>
+
+                {activeStep === steps.length - 1 ? (
+                  <Button
+                    variant="contained"
+                    disabled={handleNextStep(activeStep)}
+                    onClick={addOrder}
+                    sx={{ mt: 3, ml: 1 }}
+                  >
+                    Place Order
+                  </Button>
+                ) : (
+                  <Button
+                    variant="contained"
+                    disabled={handleNextStep(activeStep)}
+                    onClick={handleNext}
+                    sx={{ mt: 3, ml: 1 }}
+                  >
+                    Next
+                  </Button>
+                )}
               </Box>
             </React.Fragment>
           )}

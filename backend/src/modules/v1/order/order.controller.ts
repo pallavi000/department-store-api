@@ -55,6 +55,7 @@ export class OrderController {
   @Post()
   @UseGuards(AuthGuard)
   async createOrder(@Body() body: OrderDto, @Req() req: IExpressRequest) {
+    console.log(body);
     let orderProductIds = [];
     try {
       const shippingAddress = await this.addressService.findAddressById(
@@ -84,13 +85,16 @@ export class OrderController {
 
       //order-products
       for (const cart of body.carts) {
+        console.log(cart, 'cart');
         const cartItem = await this.cartService.findCartItemsByUserId(
           cart,
           req.user._id,
         );
+        console.log(cartItem);
         const product = await this.productService.getProductById(
           cartItem.product._id.toString(),
         );
+        console.log(product, 'product');
         const { _id, ...productData } = product.toObject();
         const op = await this.orderProductService.createOrderProduct({
           ...productData,

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { fetchAllProductsApi } from "../service/productService";
 import {
   Button,
@@ -9,20 +9,26 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
+import { useSelector } from "react-redux";
 import { TProduct } from "../@types/Product";
 import Product from "../components/Product";
+import { fetchProducts } from "../redux/reducers/productReducer";
+import { AppState, useAppDispatch } from "../redux/store";
 
 function Home() {
-  const [products, setProducts] = useState<TProduct[]>([]);
-  const getProducts = async () => {
-    try {
-      const response = await fetchAllProductsApi();
-      setProducts(response);
-    } catch (error) {}
-  };
+  const dispatch = useAppDispatch();
+
   useEffect(() => {
-    getProducts();
+    dispatch(fetchProducts());
   }, []);
+  const { products, isLoading } = useSelector((state: AppState) => ({
+    products: state.product.products,
+    isLoading: state.product.isLoading,
+  }));
+
+  {
+    isLoading && <div>Loading</div>;
+  }
 
   return (
     <Container
@@ -35,7 +41,7 @@ function Home() {
         paddingTop: 5,
       }}
     >
-      {products.map((product: TProduct) => {
+      {products?.map((product: TProduct) => {
         return <Product product={product} />;
       })}
     </Container>
