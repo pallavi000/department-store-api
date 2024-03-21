@@ -1,4 +1,6 @@
+import { TCart, TCartInput } from "./Cart";
 import { TCategory, TProduct } from "./Product";
+import { TUser } from "./User";
 
 export type ProductsState = {
   products: TProduct[] | null;
@@ -22,4 +24,23 @@ export type CategoryState = {
   category: TCategory | null;
   isLoading: boolean;
   error: string | null;
+};
+
+export type CartsState = {
+  carts: TCart[] | null;
+  isLoading: boolean;
+  error: string | null;
+};
+
+export type CartState = {
+  cart: TCartInput | null;
+  isLoading: boolean;
+  error: string | null;
+};
+
+export type AuthState = {
+  user: TUser | null;
+  isLoading: boolean;
+  error: string | null;
+  auth_token: string | null;
 };

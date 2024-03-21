@@ -17,6 +17,8 @@ import { Link } from "react-router-dom";
 import { loginApi } from "../service/authService";
 import { TLogin } from "../@types/Auth";
 import { useAuthContext } from "../context/AuthContext";
+import { useAppDispatch } from "../redux/store";
+import { loginUser } from "../redux/reducers/authReducer";
 
 // TODO remove, this demo shouldn't need to reset the theme.
 const defaultTheme = createTheme();
@@ -28,19 +30,13 @@ export default function SignIn() {
     formState: { errors },
   } = useForm<TLogin>();
 
+  // app dispatch
+  const dispatch = useAppDispatch();
+
   const { setToken } = useAuthContext();
 
   const onSubmitHandler: SubmitHandler<TLogin> = async (data: TLogin) => {
-    try {
-      const response = await loginApi(data);
-      if (response) {
-        localStorage.setItem("token", response.token);
-        setToken(response.token);
-      }
-      window.location.href = "/";
-    } catch (error) {
-      console.log(error);
-    }
+    dispatch(loginUser(data));
   };
 
   return (

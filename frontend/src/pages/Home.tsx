@@ -21,14 +21,13 @@ function Home() {
   useEffect(() => {
     dispatch(fetchProducts());
   }, []);
+
   const { products, isLoading } = useSelector((state: AppState) => ({
     products: state.products.products,
     isLoading: state.products.isLoading,
   }));
 
-  {
-    isLoading && <div>Loading</div>;
-  }
+  isLoading && <div>Loading</div>;
 
   return (
     <Container

@@ -19,7 +19,7 @@ export const useAuthContext = () => useContext(AuthContext);
 
 const AuthContextProvider = ({ children }: React.PropsWithChildren) => {
   const [token, setToken] = useState<string>(
-    localStorage.getItem("token") || ""
+    localStorage.getItem("access_token") || ""
   );
   const [user, setUser] = useState<TUser | null>(null);
   const [carts, setCarts] = useState<TCart[]>([]);
@@ -28,7 +28,7 @@ const AuthContextProvider = ({ children }: React.PropsWithChildren) => {
   const getCurrentUser = async () => {
     try {
       const user = await getCurrentUserApi();
-      setUser(user);
+      setUser(user.data);
     } catch (error) {
       console.log(error);
     }

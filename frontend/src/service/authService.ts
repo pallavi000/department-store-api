@@ -5,15 +5,15 @@ import { TUser } from "../@types/User";
 
 export const registerApi = async (data: TRegister) => {
   const response = await axiosInstance.post("/auth/register", data);
-  return response.data;
+  return response;
 };
 
 export const loginApi = async (data: TLogin) => {
   const response = await axiosInstance.post("/auth/login", data);
-  return response.data;
+  return response;
 };
 
 export const getCurrentUserApi = async () => {
   const response = await axiosInstance.get("/auth/profile");
-  return response.data;
+  return response;
 };

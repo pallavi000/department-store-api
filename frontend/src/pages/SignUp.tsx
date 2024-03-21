@@ -33,8 +33,8 @@ export default function SignUp() {
   const onSubmitHandler: SubmitHandler<TRegister> = async (data: TRegister) => {
     try {
       const response = await registerApi(data);
-      localStorage.setItem("token", response.token);
-      setToken(response.token);
+      localStorage.setItem("token", response.data?.token);
+      setToken(response.data?.token);
 
       console.log(response);
     } catch (error) {
