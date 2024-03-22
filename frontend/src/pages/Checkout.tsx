@@ -18,6 +18,8 @@ import CheckoutAddress from "../components/CheckoutAddress";
 import { TCart } from "../@types/Cart";
 import { TOrderInput } from "../@types/Order";
 import { createOrderApi } from "../service/orderService";
+import { useSelector } from "react-redux";
+import { AppState } from "../redux/store";
 
 const steps = ["Shipping address", "Payment details", "Review your order"];
 
@@ -26,16 +28,13 @@ export default function Checkout() {
   const [billing, setBilling] = React.useState("");
   const [shipping, setShipping] = React.useState("");
   const [isPaymentMethod, setIsPaymentMethod] = React.useState<boolean>(false);
-  const [cartTotal, setCartTotal] = React.useState<number>();
-
-  // React.useEffect(() => {
-  //   if (carts && carts.length) {
-  //     const totalVal = carts.reduce((total, cart: TCart) => {
-  //       return total + cart.total;
-  //     }, 0);
-  //     setCartTotal(totalVal);
-  //   }
-  // }, [carts]);
+  const { carts, totalPrice, totalQuantity } = useSelector(
+    (state: AppState) => ({
+      carts: state.carts.carts,
+      totalPrice: state.carts.totalPrice,
+      totalQuantity: state.carts.totalOrderQuantity,
+    })
+  );
 
   const handleNext = () => {
     setActiveStep(activeStep + 1);
@@ -45,7 +44,6 @@ export default function Checkout() {
     setActiveStep(activeStep - 1);
   };
 
-  // TODO:useCallBacks
   function getStepContent(step: number) {
     switch (step) {
       case 0:
@@ -69,19 +67,19 @@ export default function Checkout() {
   };
 
   const addOrder = async () => {
-    // try {
-    //   if (shipping && billing && carts.length && cartTotal) {
-    //     const data: TOrderInput = {
-    //       shipping: shipping,
-    //       billing: billing,
-    //       total: cartTotal,
-    //       payment_method: "strip",
-    //       carts: carts.map((cart) => cart._id),
-    //     };
-    //     const response = await createOrderApi(data);
-    //     console.log(response.data);
-    //   }
-    // } catch (error) {}
+    try {
+      if (shipping && billing && carts.length) {
+        const data: TOrderInput = {
+          shipping: shipping,
+          billing: billing,
+          total: totalPrice,
+          payment_method: "PAYPAL",
+          carts: carts.map((cart) => cart._id),
+        };
+        const response = await createOrderApi(data);
+        console.log(response.data);
+      }
+    } catch (error) {}
   };
 
   return (

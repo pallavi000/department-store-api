@@ -49,6 +49,22 @@ export class OrderController {
 
   @ApiBearerAuth()
   @ApiResponse({
+    status: HttpStatus.OK,
+    type: OrderDto,
+    isArray: true,
+  })
+  @Get('/user')
+  async findOrderByUser(@Req() req: IExpressRequest) {
+    try {
+      const orders = await this.orderService.findOrderByUserId(req.user._id);
+      return orders;
+    } catch (error) {
+      throw new ApiError(error);
+    }
+  }
+
+  @ApiBearerAuth()
+  @ApiResponse({
     status: HttpStatus.CREATED,
     type: OrderDto,
   })

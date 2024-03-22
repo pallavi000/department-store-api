@@ -10,6 +10,7 @@ import Profile from "./pages/Profile";
 import { AppState, useAppDispatch } from "./redux/store";
 import { useSelector } from "react-redux";
 import { currentUser } from "./redux/reducers/authReducer";
+import { fetchOrderByUserId } from "./redux/reducers/ordersReducer";
 
 function App() {
   const dispatch = useAppDispatch();

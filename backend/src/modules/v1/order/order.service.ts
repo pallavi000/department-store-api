@@ -19,6 +19,15 @@ export class OrderService {
     return orders;
   }
 
+  async findOrderByUserId(userId: string) {
+    const orders = await this.orderModel
+      .find({ user: userId })
+      .populate('product')
+      .populate('shipping')
+      .populate('billing');
+    return orders;
+  }
+
   async createOrder(body: OrderDto, orderProductIds: string[], userId: string) {
     const order = await this.orderModel.create({
       ...body,

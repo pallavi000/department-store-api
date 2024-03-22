@@ -1,4 +1,5 @@
 import { TCart, TCartInput } from "./Cart";
+import { TOrder } from "./Order";
 import { TCategory, TProduct } from "./Product";
 import { TUser } from "./User";
 
@@ -45,4 +46,10 @@ export type AuthState = {
   isLoading: boolean;
   error: string | null;
   access_token: string | null;
+};
+
+export type OrderState = {
+  orders: TOrder[];
+  isLoading: boolean;
+  error: string | null;
 };

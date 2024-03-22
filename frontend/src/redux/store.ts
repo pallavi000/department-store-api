@@ -7,6 +7,7 @@ import authReducer from "./reducers/authReducer";
 import categoryReducer from "./reducers/categoryReducer";
 import categoriesReducer from "./reducers/categoriesReducer";
 import persistStore from "redux-persist/es/persistStore";
+import ordersReducer from "./reducers/ordersReducer";
 
 const rootReducer = {
   products: productsReducer,
@@ -15,6 +16,7 @@ const rootReducer = {
   categories: categoriesReducer,
   carts: cartsReducer,
   auth: authReducer,
+  orders: ordersReducer,
 };
 const store = configureStore({
   reducer: rootReducer,
