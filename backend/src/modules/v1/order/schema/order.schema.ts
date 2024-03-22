@@ -10,7 +10,8 @@ export class Order {
   user: mongoose.Types.ObjectId;
 
   @Prop({
-    type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Product' }],
+    type: [{ type: mongoose.Schema.Types.ObjectId }],
+    ref: 'OrderProduct',
   })
   products: mongoose.Types.ObjectId[];
 

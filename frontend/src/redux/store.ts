@@ -8,6 +8,7 @@ import categoryReducer from "./reducers/categoryReducer";
 import categoriesReducer from "./reducers/categoriesReducer";
 import persistStore from "redux-persist/es/persistStore";
 import ordersReducer from "./reducers/ordersReducer";
+import addressReducer from "./reducers/addressReducer";
 
 const rootReducer = {
   products: productsReducer,
@@ -17,6 +18,7 @@ const rootReducer = {
   carts: cartsReducer,
   auth: authReducer,
   orders: ordersReducer,
+  address: addressReducer,
 };
 const store = configureStore({
   reducer: rootReducer,

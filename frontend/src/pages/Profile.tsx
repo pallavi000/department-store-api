@@ -19,6 +19,7 @@ function Profile() {
   const carts = [];
 
   const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
 
   if (!user) return <>Loading...</>;
 
@@ -48,7 +49,7 @@ function Profile() {
           </Stack>
         </Stack>
       </Card>
-      {open && <EditUserModal />}
+      <EditUserModal open={open} handleClose={handleClose} setOpen={setOpen} />
     </Container>
   );
 }

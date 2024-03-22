@@ -4,12 +4,13 @@ import {
   getCurrentUserApi,
   loginApi,
   registerApi,
+  updateUserProfileApi,
 } from "../../service/authService";
 import { AuthState } from "../../@types/ReduxState";
 import persistReducer from "redux-persist/es/persistReducer";
 import { authPersistConfig } from "../../utils/reduxPersistConfig";
 import { AxiosError } from "axios";
-import { TUser } from "../../@types/User";
+import { TUser, TUserUpdate } from "../../@types/User";
 
 const initialState: AuthState = {
   user: null,
@@ -105,6 +106,24 @@ const authSlice = createSlice({
         error: errorMessage || null,
       };
     });
+    builder.addCase(updateUserProfile.pending, (state, action) => {
+      return { ...state, isLoading: true };
+    });
+    builder.addCase(updateUserProfile.fulfilled, (state, action) => {
+      return {
+        ...state,
+        isLoading: false,
+        user: action.payload,
+        error: null,
+      };
+    });
+    builder.addCase(updateUserProfile.rejected, (state, action) => {
+      return {
+        ...state,
+        isLoading: false,
+        error: action.error.message || null,
+      };
+    });
   },
 });
 
@@ -145,5 +164,17 @@ export const registerUser = createAsyncThunk(
   }
 );
 
-const { logout } = authSlice.actions;
+export const updateUserProfile = createAsyncThunk(
+  "updateUserProfile",
+  async ({ id, data }: { id: string; data: TUserUpdate }) => {
+    try {
+      const response = await updateUserProfileApi({ id, data });
+      return response.data;
+    } catch (error) {
+      console.log(error);
+    }
+  }
+);
+
+export const { logout } = authSlice.actions;
 export default persistReducer(authPersistConfig, authSlice.reducer);

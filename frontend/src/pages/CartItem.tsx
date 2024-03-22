@@ -9,6 +9,7 @@ import {
   fetchAllCarts,
   removeCartById,
   updateCartItem,
+  updateCartQuantity,
 } from "../redux/reducers/cartsReducer";
 
 function CartItem() {
@@ -45,16 +46,18 @@ function CartItem() {
     if (type === "increase") {
       console.log("cart increase");
       cart.quantity += 1;
+      cart.total += cart.product?.price;
     } else if (type === "decrease" && cart.quantity > 1) {
       cart.quantity -= 1;
+      cart.total -= cart.product?.price;
     }
-    console.log(cart.quantity, "updated quantity");
     const data = {
       user: cart.user?._id,
       product: cart.product?._id,
       quantity: cart.quantity,
       total: cart.total,
     };
+    dispatch(updateCartQuantity(cart));
     dispatch(updateCartItem(data));
   };
 

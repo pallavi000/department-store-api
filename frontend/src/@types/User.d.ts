@@ -4,3 +4,8 @@ export type TUser = {
   email: string;
   isAdmin: boolean;
 };
+
+export type TUserUpdate = {
+  name: string;
+  email: string;
+};

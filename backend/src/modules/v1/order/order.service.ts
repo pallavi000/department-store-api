@@ -20,9 +20,10 @@ export class OrderService {
   }
 
   async findOrderByUserId(userId: string) {
+    console.log(userId);
     const orders = await this.orderModel
       .find({ user: userId })
-      .populate('product')
+      .populate('products')
       .populate('shipping')
       .populate('billing');
     return orders;

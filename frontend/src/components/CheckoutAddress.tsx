@@ -3,6 +3,9 @@ import { TAddress } from "../@types/Address";
 import { getAddressApi } from "../service/addressService";
 import AddressPicker from "./AddressPicker";
 import AddressForm from "./AddressForm";
+import { AppState, useAppDispatch } from "../redux/store";
+import { fetchAddress } from "../redux/reducers/addressReducer";
+import { useSelector } from "react-redux";
 
 type AddressProps = {
   setShipping: React.Dispatch<React.SetStateAction<string>>;
@@ -10,20 +13,15 @@ type AddressProps = {
 };
 
 function CheckoutAddress({ setShipping, setBilling }: AddressProps) {
-  const [addresses, setAddresses] = useState<TAddress[]>();
-
-  const getAddresses = async () => {
-    try {
-      const address = await getAddressApi();
-      setAddresses(address);
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  const { addresses } = useSelector((state: AppState) => ({
+    addresses: state.address.addresses,
+  }));
+  const dispatch = useAppDispatch();
 
   React.useEffect(() => {
-    getAddresses();
+    dispatch(fetchAddress());
   }, []);
+
   return (
     <>
       {addresses?.length ? (
@@ -33,7 +31,7 @@ function CheckoutAddress({ setShipping, setBilling }: AddressProps) {
           setShipping={setShipping}
         />
       ) : (
-        <AddressForm onAddressSubmit={getAddresses} />
+        <AddressForm />
       )}
     </>
   );

@@ -10,7 +10,8 @@ import Profile from "./pages/Profile";
 import { AppState, useAppDispatch } from "./redux/store";
 import { useSelector } from "react-redux";
 import { currentUser } from "./redux/reducers/authReducer";
-import { fetchOrderByUserId } from "./redux/reducers/ordersReducer";
+import Order from "./pages/Order";
+import ProductDetail from "./pages/ProductDetail";
 
 function App() {
   const dispatch = useAppDispatch();
@@ -34,6 +35,9 @@ function App() {
           <Route path="/cart-items" element={<CartItem />} />
           <Route path="/checkout" element={<Checkout />} />
           <Route path="/profile" element={<Profile />} />
+          <Route path="/order-list" element={<Order />} />
+          <Route path="/profile" element={<Profile />} />
+          <Route path="/product-detail/:id" element={<ProductDetail />} />
         </Route>
       </Routes>
     </Router>

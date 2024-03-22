@@ -26,7 +26,10 @@ export class ProductsService {
   }
 
   async getProductById(id: string) {
-    const product = await this.productsModel.findById(id);
+    const product = await this.productsModel
+      .findById(id)
+      .populate('category')
+      .populate('brand');
     return product;
   }
 

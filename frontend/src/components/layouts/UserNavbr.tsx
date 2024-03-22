@@ -17,7 +17,8 @@ import { Link } from "react-router-dom";
 
 import { ShoppingCart } from "@mui/icons-material";
 import { useSelector } from "react-redux";
-import { AppState } from "../../redux/store";
+import { AppState, useAppDispatch } from "../../redux/store";
+import { logout } from "../../redux/reducers/authReducer";
 
 const pages = ["Products", "Pricing", "Blog"];
 
@@ -28,7 +29,7 @@ function UserNavBar() {
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(
     null
   );
-
+  const dispatch = useAppDispatch();
   const [isLoggedIn, setIsLoggedIn] = React.useState<boolean>(false);
 
   const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
@@ -204,7 +205,7 @@ function UserNavBar() {
                   </Typography>
                 </Link>
               </MenuItem>
-              <MenuItem onClick={() => ""}>
+              <MenuItem onClick={() => dispatch(logout({}))}>
                 <Typography variant="body2">Logout</Typography>
               </MenuItem>
             </Menu>

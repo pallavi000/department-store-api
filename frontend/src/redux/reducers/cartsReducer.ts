@@ -41,7 +41,19 @@ const initialState: CartsState = {
 const cartsSlice = createSlice({
   name: "carts",
   initialState,
-  reducers: {},
+  reducers: {
+    updateCartQuantity: (state, action) => {
+      const itemIndex = state.carts.findIndex(
+        (cart) => cart._id === action.payload._id
+      );
+      if (itemIndex !== -1) {
+        state.carts[itemIndex] = action.payload;
+      }
+      state.totalPrice = calculateTotalPrice(state.carts);
+      state.totalOrderQuantity = calculateTotalQuantity(state.carts);
+      return state;
+    },
+  },
   extraReducers: (builder) => {
     builder.addCase(fetchAllCarts.pending, (state, action) => {
       return {
@@ -55,6 +67,8 @@ const cartsSlice = createSlice({
         carts: action.payload,
         isLoading: false,
         error: null,
+        totalOrderQuantity: calculateTotalQuantity(action.payload),
+        totalPrice: calculateTotalPrice(action.payload),
       };
     });
     builder.addCase(fetchAllCarts.rejected, (state, action) => {
@@ -103,14 +117,6 @@ const cartsSlice = createSlice({
     builder.addCase(
       updateCartItem.fulfilled,
       (state, action: PayloadAction<TCart>) => {
-        const itemIndex = state.carts.findIndex(
-          (cart) => cart._id === action.payload._id
-        );
-        if (itemIndex !== -1) {
-          state.carts[itemIndex] = action.payload;
-        }
-        state.totalPrice = calculateTotalPrice(state.carts);
-        state.totalOrderQuantity = calculateTotalQuantity(state.carts);
         state.isLoading = false;
         state.error = null;
         return state;
@@ -201,4 +207,5 @@ export const removeCartById = createAsyncThunk(
   }
 );
 
+export const { updateCartQuantity } = cartsSlice.actions;
 export default persistReducer(cartPersistConfig, cartsSlice.reducer);

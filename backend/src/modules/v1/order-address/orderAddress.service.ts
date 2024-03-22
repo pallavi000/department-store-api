@@ -11,6 +11,7 @@ export class OrderAddressService {
   ) {}
 
   async createOrderAddress(body: any) {
+    console.log(body, 'body add');
     const orderAddress = await this.orderAddressModel.create(body);
     return orderAddress;
   }

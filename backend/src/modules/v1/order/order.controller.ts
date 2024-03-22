@@ -53,9 +53,11 @@ export class OrderController {
     type: OrderDto,
     isArray: true,
   })
+  @UseGuards(AuthGuard)
   @Get('/user')
   async findOrderByUser(@Req() req: IExpressRequest) {
     try {
+      console.log(req.user, 'useriddd');
       const orders = await this.orderService.findOrderByUserId(req.user._id);
       return orders;
     } catch (error) {
@@ -86,16 +88,17 @@ export class OrderController {
       if (!billingAddress) {
         throw new ApiError('Invalid billing Id');
       }
-
+      const { _id: shippingId, ...shippingData } = shippingAddress.toObject();
+      const { _id: billingId, ...billingData } = billingAddress.toObject();
       //order-address-create
       const shipping = await this.orderAddressService.createOrderAddress({
         type: 'shipping',
-        ...shippingAddress,
+        ...shippingData,
         user: req.user._id,
       });
       const billing = await this.orderAddressService.createOrderAddress({
         type: 'billing',
-        ...billingAddress,
+        ...billingData,
         user: req.user._id,
       });
 

@@ -20,10 +20,12 @@ import { TOrderInput } from "../@types/Order";
 import { createOrderApi } from "../service/orderService";
 import { useSelector } from "react-redux";
 import { AppState } from "../redux/store";
+import { useNavigate } from "react-router-dom";
 
 const steps = ["Shipping address", "Payment details", "Review your order"];
 
 export default function Checkout() {
+  const navigate = useNavigate();
   const [activeStep, setActiveStep] = React.useState(0);
   const [billing, setBilling] = React.useState("");
   const [shipping, setShipping] = React.useState("");
@@ -76,8 +78,8 @@ export default function Checkout() {
           payment_method: "PAYPAL",
           carts: carts.map((cart) => cart._id),
         };
-        const response = await createOrderApi(data);
-        console.log(response.data);
+        await createOrderApi(data);
+        navigate("/order-list");
       }
     } catch (error) {}
   };

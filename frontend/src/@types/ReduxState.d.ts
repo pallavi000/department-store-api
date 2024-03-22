@@ -1,3 +1,4 @@
+import { TAddress } from "./Address";
 import { TCart, TCartInput } from "./Cart";
 import { TOrder } from "./Order";
 import { TCategory, TProduct } from "./Product";
@@ -50,6 +51,12 @@ export type AuthState = {
 
 export type OrderState = {
   orders: TOrder[];
+  isLoading: boolean;
+  error: string | null;
+};
+
+export type AddressState = {
+  addresses: TAddress[];
   isLoading: boolean;
   error: string | null;
 };

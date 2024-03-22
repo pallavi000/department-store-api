@@ -8,11 +8,11 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import { TAddressInput } from "../@types/Address";
 import { Button } from "@mui/material";
 import { addAddressApi, getAddressApi } from "../service/addressService";
+import { useAppDispatch } from "../redux/store";
+import { addAddress } from "../redux/reducers/addressReducer";
 
-type AddressProps = {
-  onAddressSubmit: () => void;
-};
-export default function AddressForm({ onAddressSubmit }: AddressProps) {
+export default function AddressForm() {
+  const dispatch = useAppDispatch();
   const {
     register,
     handleSubmit: onSubmit,
@@ -22,8 +22,7 @@ export default function AddressForm({ onAddressSubmit }: AddressProps) {
   const onSubmitHandler: SubmitHandler<TAddressInput> = async (
     data: TAddressInput
   ) => {
-    await addAddressApi(data);
-    onAddressSubmit();
+    await dispatch(addAddress(data));
   };
 
   return (
