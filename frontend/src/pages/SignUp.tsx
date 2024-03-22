@@ -16,7 +16,8 @@ import { Link } from "react-router-dom";
 
 import { registerApi } from "../service/authService";
 import { TRegister } from "../@types/Auth";
-import { useAuthContext } from "../context/AuthContext";
+import { useAppDispatch } from "../redux/store";
+import { registerUser } from "../redux/reducers/authReducer";
 
 // TODO remove, this demo shouldn't need to reset the theme.
 const defaultTheme = createTheme();
@@ -28,18 +29,10 @@ export default function SignUp() {
     formState: { errors },
   } = useForm<TRegister>();
 
-  const { setToken } = useAuthContext();
+  const dispatch = useAppDispatch();
 
   const onSubmitHandler: SubmitHandler<TRegister> = async (data: TRegister) => {
-    try {
-      const response = await registerApi(data);
-      localStorage.setItem("token", response.data?.token);
-      setToken(response.data?.token);
-
-      console.log(response);
-    } catch (error) {
-      console.log(error);
-    }
+    dispatch(registerUser(data));
   };
 
   return (

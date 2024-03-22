@@ -15,7 +15,6 @@ import AddressForm from "../components/AddressForm";
 import PaymentForm from "../components/PaymentForm";
 import Review from "../components/Review";
 import CheckoutAddress from "../components/CheckoutAddress";
-import { useAuthContext } from "../context/AuthContext";
 import { TCart } from "../@types/Cart";
 import { TOrderInput } from "../@types/Order";
 import { createOrderApi } from "../service/orderService";
@@ -28,16 +27,15 @@ export default function Checkout() {
   const [shipping, setShipping] = React.useState("");
   const [isPaymentMethod, setIsPaymentMethod] = React.useState<boolean>(false);
   const [cartTotal, setCartTotal] = React.useState<number>();
-  const { carts } = useAuthContext();
 
-  React.useEffect(() => {
-    if (carts && carts.length) {
-      const totalVal = carts.reduce((total, cart: TCart) => {
-        return total + cart.total;
-      }, 0);
-      setCartTotal(totalVal);
-    }
-  }, [carts]);
+  // React.useEffect(() => {
+  //   if (carts && carts.length) {
+  //     const totalVal = carts.reduce((total, cart: TCart) => {
+  //       return total + cart.total;
+  //     }, 0);
+  //     setCartTotal(totalVal);
+  //   }
+  // }, [carts]);
 
   const handleNext = () => {
     setActiveStep(activeStep + 1);
@@ -71,20 +69,19 @@ export default function Checkout() {
   };
 
   const addOrder = async () => {
-    try {
-      if (shipping && billing && carts.length && cartTotal) {
-        const data: TOrderInput = {
-          shipping: shipping,
-          billing: billing,
-          total: cartTotal,
-          payment_method: "strip",
-          carts: carts.map((cart) => cart._id),
-        };
-
-        const response = await createOrderApi(data);
-        console.log(response.data);
-      }
-    } catch (error) {}
+    // try {
+    //   if (shipping && billing && carts.length && cartTotal) {
+    //     const data: TOrderInput = {
+    //       shipping: shipping,
+    //       billing: billing,
+    //       total: cartTotal,
+    //       payment_method: "strip",
+    //       carts: carts.map((cart) => cart._id),
+    //     };
+    //     const response = await createOrderApi(data);
+    //     console.log(response.data);
+    //   }
+    // } catch (error) {}
   };
 
   return (

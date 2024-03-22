@@ -2,7 +2,6 @@ import { configureStore } from "@reduxjs/toolkit";
 import { useDispatch } from "react-redux";
 import productsReducer from "./reducers/productsReducer";
 import cartsReducer from "./reducers/cartsReducer";
-import cartReducer from "./reducers/cartReducer";
 import productReducer from "./reducers/productReducer";
 import authReducer from "./reducers/authReducer";
 import categoryReducer from "./reducers/categoryReducer";
@@ -15,7 +14,6 @@ const rootReducer = {
   category: categoryReducer,
   categories: categoriesReducer,
   carts: cartsReducer,
-  cart: cartReducer,
   auth: authReducer,
 };
 const store = configureStore({

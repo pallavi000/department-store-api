@@ -1,4 +1,4 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { TLogin, TRegister } from "../../@types/Auth";
 import {
   getCurrentUserApi,
@@ -8,18 +8,28 @@ import {
 import { AuthState } from "../../@types/ReduxState";
 import persistReducer from "redux-persist/es/persistReducer";
 import { authPersistConfig } from "../../utils/reduxPersistConfig";
+import { AxiosError } from "axios";
+import { TUser } from "../../@types/User";
 
 const initialState: AuthState = {
   user: null,
   error: null,
-  auth_token: null,
+  access_token: null,
   isLoading: false,
 };
 
 const authSlice = createSlice({
   name: "auth",
   initialState,
-  reducers: {},
+  reducers: {
+    logout: (state, action) => {
+      return {
+        ...state,
+        user: null,
+        access_token: null,
+      };
+    },
+  },
   extraReducers: (builder) => {
     builder.addCase(loginUser.pending, (state, action) => {
       return {
@@ -28,10 +38,11 @@ const authSlice = createSlice({
       };
     });
     builder.addCase(loginUser.fulfilled, (state, action) => {
+      console.log(action.payload, "action payload auth");
       return {
         ...state,
         isLoading: false,
-        auth_token: action.payload.token,
+        access_token: action.payload.token,
         user: action.payload.user,
       };
     });
@@ -49,13 +60,17 @@ const authSlice = createSlice({
         isLoading: true,
       };
     });
-    builder.addCase(currentUser.fulfilled, (state, action) => {
-      return {
-        ...state,
-        user: action.payload.user,
-        isLoading: false,
-      };
-    });
+    builder.addCase(
+      currentUser.fulfilled,
+      (state, action: PayloadAction<TUser>) => {
+        // always use typeeee
+        return {
+          ...state,
+          user: action.payload,
+          isLoading: false,
+        };
+      }
+    );
 
     builder.addCase(currentUser.rejected, (state, action) => {
       const errorMessage = action.error.message;
@@ -76,8 +91,9 @@ const authSlice = createSlice({
     builder.addCase(registerUser.fulfilled, (state, action) => {
       return {
         ...state,
-        isLoading: true,
+        isLoading: false,
         access_token: action.payload.token,
+        error: null,
       };
     });
 
@@ -101,14 +117,21 @@ export const loginUser = createAsyncThunk("loginUser", async (data: TLogin) => {
   }
 });
 
-export const currentUser = createAsyncThunk("currentUser", async () => {
-  try {
-    const response = await getCurrentUserApi();
-    return response.data;
-  } catch (error) {
-    console.log(error);
+export const currentUser = createAsyncThunk(
+  "currentUser",
+  async (_, { dispatch }) => {
+    try {
+      const response = await getCurrentUserApi();
+      return response.data;
+    } catch (error) {
+      const err = error as AxiosError;
+      const code = err.response?.status || 500;
+      if (code === 401 || code === 403) {
+        dispatch(logout({}));
+      }
+    }
   }
-});
+);
 
 export const registerUser = createAsyncThunk(
   "registerUser",
@@ -122,4 +145,5 @@ export const registerUser = createAsyncThunk(
   }
 );
 
+const { logout } = authSlice.actions;
 export default persistReducer(authPersistConfig, authSlice.reducer);

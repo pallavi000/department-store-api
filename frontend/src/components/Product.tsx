@@ -7,16 +7,24 @@ import {
   CardContent,
   Typography,
 } from "@mui/material";
-import { useAuthContext } from "../context/AuthContext";
 import { TCart, TCartInput } from "../@types/Cart";
 import { addToCartApi } from "../service/cartService";
 import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { AppState, useAppDispatch } from "../redux/store";
+import { addToCart } from "../redux/reducers/cartsReducer";
 
 function Product({ product }: { product: TProduct }) {
-  const { setCarts, carts, user } = useAuthContext();
-  const [isAlreadyInCart, setIsAlreadyInCart] = useState(false);
+  const { user, carts } = useSelector((state: AppState) => ({
+    user: state.auth.user,
+    carts: state.carts.carts,
+  }));
 
-  const addToCart = async (productId: string) => {
+  const [isAlreadyInCart, setIsAlreadyInCart] = useState(false);
+  const dispatch = useAppDispatch();
+
+  const handleAddToCart = async (productId: string) => {
+    console.log("cart", user, productId);
     try {
       if (user && productId) {
         const data: TCartInput = {
@@ -25,14 +33,11 @@ function Product({ product }: { product: TProduct }) {
           quantity: 1,
           total: product.price * 1,
         };
-        const response = await addToCartApi(data);
+        await dispatch(addToCart(data));
         setIsAlreadyInCart(true);
-        setCarts(response);
       }
     } catch (error) {}
   };
-
-  console.log(carts);
 
   return (
     <Card
@@ -62,7 +67,7 @@ function Product({ product }: { product: TProduct }) {
             <Link to="/cart-items">View CartI List</Link>
           </Button>
         ) : (
-          <Button size="small" onClick={() => addToCart(product._id)}>
+          <Button size="small" onClick={() => handleAddToCart(product._id)}>
             Add To Cart
           </Button>
         )}

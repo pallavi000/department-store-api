@@ -14,10 +14,10 @@ import MenuItem from "@mui/material/MenuItem";
 import AdbIcon from "@mui/icons-material/Adb";
 import { Stack } from "@mui/material";
 import { Link } from "react-router-dom";
-import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
 
-import { useAuthContext } from "../../context/AuthContext";
-import { LocalMallOutlined, ShoppingCart } from "@mui/icons-material";
+import { ShoppingCart } from "@mui/icons-material";
+import { useSelector } from "react-redux";
+import { AppState } from "../../redux/store";
 
 const pages = ["Products", "Pricing", "Blog"];
 
@@ -28,8 +28,6 @@ function UserNavBar() {
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(
     null
   );
-
-  const [cartCount, setCartCount] = React.useState<number>(0);
 
   const [isLoggedIn, setIsLoggedIn] = React.useState<boolean>(false);
 
@@ -48,23 +46,19 @@ function UserNavBar() {
     setAnchorElUser(null);
   };
 
-  const { user, token, carts } = useAuthContext();
+  const { user, access_token, totalOrderQuantity } = useSelector(
+    (state: AppState) => ({
+      user: state.auth.user,
+      access_token: state.auth.access_token,
+      totalOrderQuantity: state.carts.totalOrderQuantity,
+    })
+  );
 
   React.useEffect(() => {
     if (user) {
       setIsLoggedIn(true);
     }
   }, [user]);
-
-  React.useEffect(() => {
-    if (carts.length) {
-      const totalCartCount = carts.reduce(
-        (total, cart) => total + cart.quantity,
-        0
-      );
-      setCartCount(totalCartCount);
-    }
-  }, [carts]);
 
   return (
     <AppBar position="static">
@@ -172,7 +166,7 @@ function UserNavBar() {
                     variant="body2"
                     sx={{ position: "absolute", top: -15, right: 5 }}
                   >
-                    {cartCount}
+                    {totalOrderQuantity}
                   </Typography>
                   <ShoppingCart />
                 </Box>

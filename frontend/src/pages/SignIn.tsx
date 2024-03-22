@@ -12,11 +12,10 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import { loginApi } from "../service/authService";
 import { TLogin } from "../@types/Auth";
-import { useAuthContext } from "../context/AuthContext";
 import { useAppDispatch } from "../redux/store";
 import { loginUser } from "../redux/reducers/authReducer";
 
@@ -32,11 +31,11 @@ export default function SignIn() {
 
   // app dispatch
   const dispatch = useAppDispatch();
-
-  const { setToken } = useAuthContext();
+  const navigate = useNavigate();
 
   const onSubmitHandler: SubmitHandler<TLogin> = async (data: TLogin) => {
-    dispatch(loginUser(data));
+    await dispatch(loginUser(data));
+    navigate("/");
   };
 
   return (

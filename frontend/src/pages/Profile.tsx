@@ -1,5 +1,4 @@
 import React from "react";
-import { useAuthContext } from "../context/AuthContext";
 import {
   Avatar,
   Button,
@@ -9,10 +8,15 @@ import {
   Typography,
 } from "@mui/material";
 import EditUserModal from "../components/Modal/EditUserModal";
+import { useSelector } from "react-redux";
+import { AppState } from "../redux/store";
 
 function Profile() {
-  const { user, carts } = useAuthContext();
+  const { user } = useSelector((state: AppState) => ({
+    user: state.auth.user,
+  }));
   const [open, setOpen] = React.useState(false);
+  const carts = [];
 
   const handleOpen = () => setOpen(true);
 

@@ -27,9 +27,11 @@ export type CategoryState = {
 };
 
 export type CartsState = {
-  carts: TCart[] | null;
+  carts: TCart[];
   isLoading: boolean;
   error: string | null;
+  totalOrderQuantity: number;
+  totalPrice: number;
 };
 
 export type CartState = {
@@ -42,5 +44,5 @@ export type AuthState = {
   user: TUser | null;
   isLoading: boolean;
   error: string | null;
-  auth_token: string | null;
+  access_token: string | null;
 };

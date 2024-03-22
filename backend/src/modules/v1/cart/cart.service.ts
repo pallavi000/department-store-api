@@ -46,18 +46,24 @@ export class CartService {
   }
 
   async updateCartQuantity(body: CartDto, cartId: mongoose.Types.ObjectId) {
-    const cart = await this.cartModel.updateOne(
-      { _id: cartId },
-      {
-        quantity: body.quantity,
-        total: body.total,
-      },
-    );
+    const cart = await this.cartModel
+      .findByIdAndUpdate(
+        cartId,
+        {
+          quantity: body.quantity,
+          total: body.total,
+        },
+        { new: true },
+      )
+      .populate('product');
     return cart;
   }
 
   async removeCart(cartId: string, userId: string) {
-    const cart = await this.cartModel.deleteOne({ _id: cartId, user: userId });
+    const cart = await this.cartModel.findOneAndDelete({
+      _id: cartId,
+      user: userId,
+    });
     return cart;
   }
 }

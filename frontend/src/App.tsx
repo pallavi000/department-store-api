@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import AppLayout from "./components/layouts/AppLayout";
 import Home from "./pages/Home";
@@ -7,8 +7,22 @@ import SignIn from "./pages/SignIn";
 import CartItem from "./pages/CartItem";
 import Checkout from "./pages/Checkout";
 import Profile from "./pages/Profile";
+import { AppState, useAppDispatch } from "./redux/store";
+import { useSelector } from "react-redux";
+import { currentUser } from "./redux/reducers/authReducer";
 
 function App() {
+  const dispatch = useAppDispatch();
+  const access_token = useSelector(
+    (state: AppState) => state.auth.access_token
+  );
+
+  useEffect(() => {
+    if (access_token) {
+      dispatch(currentUser());
+    }
+  }, [access_token]);
+
   return (
     <Router>
       <Routes>
