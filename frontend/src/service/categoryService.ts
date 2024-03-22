@@ -7,3 +7,7 @@ export const fetchCategoriesApi = async () => {
 export const fetchCategoryByIdApi = async (id: string) => {
   return await axiosInstance.get(`/categories/${id}`);
 };
+
+export const fetchProductsByCategoryApi = async (id: string) => {
+  return await axiosInstance.get(`/products/category/${id}`);
+};

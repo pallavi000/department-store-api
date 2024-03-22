@@ -12,6 +12,7 @@ import { useSelector } from "react-redux";
 import { currentUser } from "./redux/reducers/authReducer";
 import Order from "./pages/Order";
 import ProductDetail from "./pages/ProductDetail";
+import CategoryProduct from "./pages/CategoryProduct";
 
 function App() {
   const dispatch = useAppDispatch();
@@ -38,6 +39,7 @@ function App() {
           <Route path="/order-list" element={<Order />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/product-detail/:id" element={<ProductDetail />} />
+          <Route path="/product-category/:id" element={<CategoryProduct />} />
         </Route>
       </Routes>
     </Router>

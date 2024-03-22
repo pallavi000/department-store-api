@@ -19,6 +19,7 @@ import { ShoppingCart } from "@mui/icons-material";
 import { useSelector } from "react-redux";
 import { AppState, useAppDispatch } from "../../redux/store";
 import { logout } from "../../redux/reducers/authReducer";
+import { fetchAllCategories } from "../../redux/reducers/categoriesReducer";
 
 const pages = ["Products", "Pricing", "Blog"];
 
@@ -47,19 +48,25 @@ function UserNavBar() {
     setAnchorElUser(null);
   };
 
-  const { user, access_token, totalOrderQuantity } = useSelector(
+  const { user, access_token, totalOrderQuantity, categories } = useSelector(
     (state: AppState) => ({
       user: state.auth.user,
       access_token: state.auth.access_token,
       totalOrderQuantity: state.carts.totalOrderQuantity,
+      categories: state.categories.categories,
     })
   );
+  console.log(categories);
 
   React.useEffect(() => {
     if (user) {
       setIsLoggedIn(true);
     }
   }, [user]);
+
+  React.useEffect(() => {
+    dispatch(fetchAllCategories());
+  }, []);
 
   return (
     <AppBar position="static">
@@ -70,7 +77,6 @@ function UserNavBar() {
             variant="h6"
             noWrap
             component="a"
-            href="#app-bar-with-responsive-menu"
             sx={{
               mr: 2,
               display: { xs: "none", md: "flex" },
@@ -81,7 +87,7 @@ function UserNavBar() {
               textDecoration: "none",
             }}
           >
-            LOGO
+            <Link to={"/"}>Home</Link>
           </Typography>
 
           <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
@@ -113,11 +119,16 @@ function UserNavBar() {
                 display: { xs: "block", md: "none" },
               }}
             >
-              {pages.map((page) => (
-                <MenuItem key={page} onClick={handleCloseNavMenu}>
-                  <Typography textAlign="center">{page}</Typography>
-                </MenuItem>
-              ))}
+              {categories &&
+                categories.map((category) => (
+                  <MenuItem key={category._id} onClick={handleCloseNavMenu}>
+                    <Typography textAlign="center">
+                      <Link to={`/product-category/${category._id}`}>
+                        {category.name}
+                      </Link>
+                    </Typography>
+                  </MenuItem>
+                ))}
             </Menu>
           </Box>
           <AdbIcon sx={{ display: { xs: "flex", md: "none" }, mr: 1 }} />
@@ -139,15 +150,14 @@ function UserNavBar() {
             <Link to={"/"}>LOGO</Link>
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
-            {pages.map((page) => (
-              <Button
-                key={page}
-                onClick={handleCloseNavMenu}
-                sx={{ my: 2, color: "white", display: "block" }}
-              >
-                {page}
-              </Button>
-            ))}
+            {categories &&
+              categories.map((category) => (
+                <Typography textAlign="center">
+                  <Link to={`/product-category/${category._id}`}>
+                    {category.name}
+                  </Link>
+                </Typography>
+              ))}
           </Box>
 
           <Box sx={{ flexGrow: 0 }}>

@@ -103,4 +103,15 @@ export class ProductsController {
       throw new ApiError(error);
     }
   }
+
+  @Get('/category/:id')
+  async getProductsByCategoryId(@Param('id') categoryId: string) {
+    try {
+      const products =
+        await this.productsService.findProductsByCategory(categoryId);
+      return products;
+    } catch (error) {
+      throw new ApiError(error);
+    }
+  }
 }

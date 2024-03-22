@@ -46,4 +46,12 @@ export class ProductsService {
     const product = await this.productsModel.findByIdAndDelete(id);
     return product;
   }
+
+  async findProductsByCategory(id: string) {
+    const products = await this.productsModel
+      .find({ category: id })
+      .populate('category')
+      .populate('brand');
+    return products;
+  }
 }
